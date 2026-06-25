@@ -6,7 +6,7 @@ document.getElementById(
 loginForm.addEventListener(
     'submit',
 
-    async function(event){
+    async (event) => {
 
         event.preventDefault();
 
@@ -23,11 +23,7 @@ loginForm.addEventListener(
             .value
         };
 
-        console.log(
-            loginDetails
-        );
-
-        try{
+        try {
 
             const response =
             await axios.post(
@@ -38,14 +34,43 @@ loginForm.addEventListener(
 
             );
 
-            console.log(
-                response
+            alert(
+                response.data.message
             );
 
         }
-        catch(err){
 
-            console.log(err);
+        catch (err) {
+
+            if (
+                err.response &&
+                err.response.status === 404
+            ) {
+
+                alert(
+                    'User not found'
+                );
+
+            }
+
+            else if (
+                err.response &&
+                err.response.status === 401
+            ) {
+
+                alert(
+                    'User not authorized'
+                );
+
+            }
+
+            else {
+
+                alert(
+                    'Something went wrong'
+                );
+
+            }
 
         }
 

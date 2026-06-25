@@ -1,43 +1,50 @@
 <p align="center">
-  <h1 align="center">Expense Tracker - Signup Backend API</h1>
+  <h1 align="center">Expense Tracker - User Authentication System</h1>
 </p>
 
 <p align="center">
-  A backend API for user registration in the Expense Tracker application built using Node.js, Express.js, MySQL, and Sequelize ORM.
+  A complete User Authentication Module for the Expense Tracker application built using Node.js, Express.js, MySQL, and Sequelize ORM following MVC Architecture.
 </p>
 
 <p align="center">
-  <p align="center"> <img src="https://img.shields.io/badge/Node.js-Backend-green?style=for-the-badge&logo=node.js" /> <img src="https://img.shields.io/badge/Express.js-Framework-black?style=for-the-badge&logo=express" /> <img src="https://img.shields.io/badge/MySQL-Database-blue?style=for-the-badge&logo=mysql" /> <img src="https://img.shields.io/badge/Sequelize-ORM-52B0E7?style=for-the-badge&logo=sequelize" /> <img src="https://img.shields.io/badge/MVC-Architecture-orange?style=for-the-badge" /> <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge" /> </p>
+  <img src="https://img.shields.io/badge/Node.js-Backend-green?style=for-the-badge&logo=node.js" />
+  <img src="https://img.shields.io/badge/Express.js-Framework-black?style=for-the-badge&logo=express" />
+  <img src="https://img.shields.io/badge/MySQL-Database-blue?style=for-the-badge&logo=mysql" />
+  <img src="https://img.shields.io/badge/Sequelize-ORM-52B0E7?style=for-the-badge&logo=sequelize" />
+  <img src="https://img.shields.io/badge/MVC-Architecture-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Authentication-System-success?style=for-the-badge" />
 </p>
 
 ---
 
 ## 📌 Project Overview
 
-This project implements the **Signup Backend API** for the Expense Tracker application.
+This project implements the **User Authentication System** for the Expense Tracker application.
 
-The API accepts user registration details from the frontend:
+Users can:
 
-* Name
-* Email
-* Password
+* Create a new account using Signup
+* Login using registered credentials
+* Prevent duplicate registrations
+* Validate user credentials
+* Store user data in MySQL Database
 
-The backend validates the request, checks for duplicate users, and stores user information in a MySQL database using Sequelize ORM.
-
-This module represents the **Model and Controller Layers** of the MVC Architecture.
+The project follows the **MVC (Model-View-Controller)** Architecture and uses **Sequelize ORM** for database operations.
 
 ---
 
 ## ✨ Features
 
-* User Registration API
+* User Registration (Signup)
+* User Login Authentication
+* Duplicate User Validation
+* Password Verification
 * MySQL Database Integration
 * Sequelize ORM
-* Duplicate User Validation
 * REST API Implementation
 * MVC Architecture
-* JSON Request & Response Handling
-* Frontend Integration Ready
+* Frontend & Backend Integration
+* Error Handling with HTTP Status Codes
 
 ---
 
@@ -48,6 +55,9 @@ This module represents the **Model and Controller Layers** of the MVC Architectu
 * MySQL
 * Sequelize ORM
 * JavaScript
+* HTML5
+* CSS3
+* Axios
 * CORS
 
 ---
@@ -55,7 +65,7 @@ This module represents the **Model and Controller Layers** of the MVC Architectu
 ## 📁 Project Structure
 
 ```text
-expense-tracker-signup-api
+expense-tracker
 │
 ├── controllers
 │   └── user.js
@@ -72,15 +82,21 @@ expense-tracker-signup-api
 ├── views
 │   ├── signup.html
 │   ├── signup.css
-│   └── signup.js
+│   ├── signup.js
+│   ├── login.html
+│   ├── login.css
+│   └── login.js
 │
 ├── images
 │   ├── signup-page.png
+│   ├── login-page.png
 │   ├── network-request.png
 │   ├── network-request2.png
 │   ├── postman-success.png
 │   ├── postman-success2.png
-│   ├── user-already-exists.png
+│   ├── login-success.png
+│   ├── unauthorized-user.png
+│   ├── user-not-found.png
 │   ├── mysql-data.png
 │   └── mvc-architecture.png
 │
@@ -91,65 +107,13 @@ expense-tracker-signup-api
 
 ---
 
-## ⚙️ Installation
+## 🔐 Authentication APIs
 
-Clone the repository:
+### Signup API
 
-```bash
-git clone https://github.com/yourusername/expense-tracker-signup-api.git
+```http
+POST /user/signup
 ```
-
-Navigate to the project folder:
-
-```bash
-cd expense-tracker-signup-api
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
----
-
-## 🗄 Database Setup
-
-Create a MySQL database:
-
-```sql
-CREATE DATABASE expensetracker;
-```
-
-Configure your database credentials inside:
-
-```text
-util/database.js
-```
-
----
-
-## ▶️ Run the Project
-
-Start the server:
-
-```bash
-node app.js
-```
-
-Expected Output:
-
-```text
-Server running on port 3000
-```
-
----
-
-## 🌐 API Endpoint
-
-### POST `/user/signup`
-
-The API accepts user details and stores them in the database.
 
 ### Request Body
 
@@ -165,7 +129,6 @@ The API accepts user details and stores them in the database.
 
 ```json
 {
-  "success": true,
   "message": "User created successfully"
 }
 ```
@@ -180,7 +143,6 @@ Status Code:
 
 ```json
 {
-  "success": false,
   "message": "User already exists"
 }
 ```
@@ -193,14 +155,73 @@ Status Code:
 
 ---
 
-## 📤 Signup Flow
+### Login API
+
+```http
+POST /user/login
+```
+
+### Request Body
+
+```json
+{
+  "email": "yash@gmail.com",
+  "password": "123456"
+}
+```
+
+### Successful Login
+
+```json
+{
+  "message": "User login successful"
+}
+```
+
+Status Code:
+
+```text
+200 OK
+```
+
+### Invalid Password
+
+```json
+{
+  "message": "User not authorized"
+}
+```
+
+Status Code:
+
+```text
+401 Unauthorized
+```
+
+### User Not Found
+
+```json
+{
+  "message": "User not found"
+}
+```
+
+Status Code:
+
+```text
+404 Not Found
+```
+
+---
+
+## 📤 Authentication Flow
 
 ```text
 User
  ↓
-Frontend Signup Form
+Frontend Form
  ↓
-POST Request
+Axios POST Request
  ↓
 Route
  ↓
@@ -210,12 +231,14 @@ Model
  ↓
 MySQL Database
  ↓
-Response Sent Back
+Response
+ ↓
+Frontend Alert
 ```
 
 ---
 
-# 🗃 User Table Schema
+## 🗃 User Table Schema
 
 | Field    | Type    |
 | -------- | ------- |
@@ -228,25 +251,19 @@ Response Sent Back
 
 ## 🏗 MVC Architecture
 
-This assignment implements the **Controller** and **Model** layers.
-
 ### View
-
-Frontend Layer
-
-Files:
 
 ```text
 signup.html
 signup.css
 signup.js
+
+login.html
+login.css
+login.js
 ```
 
 ### Controller
-
-Handles incoming requests and business logic.
-
-Files:
 
 ```text
 controllers/user.js
@@ -258,14 +275,11 @@ Responsibilities:
 Receive Requests
 Validate Data
 Check Existing Users
+Verify Login Credentials
 Send Responses
 ```
 
 ### Model
-
-Handles database operations.
-
-Files:
 
 ```text
 models/user.js
@@ -279,23 +293,18 @@ Store User Data
 Manage User Records
 ```
 
-
-
 ### MVC Architecture Diagram
 
 ![MVC Architecture](./images/mvc-architecture.png)
 
 ---
 
-
 ## MVC Flow Diagram
 
 ```text
 ┌─────────────────────┐
 │       VIEW          │
-│ signup.html         │
-│ signup.css          │
-│ signup.js           │
+│ HTML • CSS • JS     │
 └──────────┬──────────┘
            │
            ▼
@@ -322,6 +331,8 @@ Manage User Records
 └─────────────────────┘
 ```
 
+---
+
 ## 📸 Project Screenshots
 
 ### Signup Page
@@ -330,66 +341,45 @@ Manage User Records
 
 ### Login Page
 
-![Signup Page](./images/login-page.png)
+![Login Page](./images/login-page.png)
 
-### Network Request
+### Network Requests
 
 ![Network Request](./images/network-request.png)
+
 ![Network Request](./images/network-request2.png)
 
-### Successful Signup
+### Successful Responses
 
-![Postman Success](./images/postman-success.png)
-![Postman Success](./images/postman-success2.png)
+![Signup Success](./images/postman-success.png)
 
-### Duplicate User Validation
+![Signup Success](./images/postman-success2.png)
 
-![User Already Exists](./images/user-already-exists.png)
+![Login Success](./images/login-success.png)
 
-### MySQL Database Records
+### Error Handling
+
+![Unauthorized User](./images/unauthorized-user.png)
+
+![User Not Found](./images/user-not-found.png)
+
+### Database Records
 
 ![MySQL Data](./images/mysql-data.png)
 
 ---
 
-## 🧪 Testing Using Postman
-
-Method:
-
-```http
-POST
-```
-
-URL:
-
-```http
-http://localhost:3000/user/signup
-```
-
-Body:
-
-```json
-{
-  "name": "Test User",
-  "email": "test@gmail.com",
-  "password": "123456"
-}
-```
-
----
-
 ## 🚀 Future Improvements
 
-* Login API
 * Password Encryption using bcrypt
 * JWT Authentication
 * Forgot Password Feature
 * Expense Management APIs
 * Premium Membership Features
+* Razorpay Integration
 * AWS Deployment
 
 ---
-
 
 ## 👨‍💻 Author
 
@@ -414,8 +404,9 @@ Body:
 </p>
 
 ---
+
 <p align="center">
-    ⭐ If you found this project helpful, consider giving it a star on GitHub!
+⭐ If you found this project helpful, consider giving it a star on GitHub!
 </p>
 
 <p align="center">
