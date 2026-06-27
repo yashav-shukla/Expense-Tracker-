@@ -42,6 +42,11 @@ loginForm.addEventListener(
 
         catch (err) {
 
+            console.log("FULL ERROR:", err);
+            console.log("RESPONSE:", err.response);
+            console.log("STATUS:",err.response?.status);
+            console.log("DATA:",err.response?.data);
+
             if (
                 err.response &&
                 err.response.status === 404

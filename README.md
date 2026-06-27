@@ -1,9 +1,9 @@
 <p align="center">
-  <h1 align="center">Expense Tracker - User Authentication System</h1>
+  <h1 align="center">Expense Tracker - Secure User Authentication System</h1>
 </p>
 
 <p align="center">
-  A complete User Authentication Module for the Expense Tracker application built using Node.js, Express.js, MySQL, and Sequelize ORM following MVC Architecture.
+  A secure User Authentication Module for the Expense Tracker application built using Node.js, Express.js, MySQL, Sequelize ORM, and bcrypt following MVC Architecture.
 </p>
 
 <p align="center">
@@ -11,6 +11,7 @@
   <img src="https://img.shields.io/badge/Express.js-Framework-black?style=for-the-badge&logo=express" />
   <img src="https://img.shields.io/badge/MySQL-Database-blue?style=for-the-badge&logo=mysql" />
   <img src="https://img.shields.io/badge/Sequelize-ORM-52B0E7?style=for-the-badge&logo=sequelize" />
+   <img src="https://img.shields.io/badge/bcrypt-Password%20Security-success?style=for-the-badge" />
   <img src="https://img.shields.io/badge/MVC-Architecture-orange?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Authentication-System-success?style=for-the-badge" />
 </p>
@@ -19,14 +20,15 @@
 
 ## 📌 Project Overview
 
-This project implements the **User Authentication System** for the Expense Tracker application.
+This project implements the **Secure User Authentication System** for the Expense Tracker application.
 
 Users can:
 
 * Create a new account using Signup
 * Login using registered credentials
 * Prevent duplicate registrations
-* Validate user credentials
+* Validate user credentials securely
+* Secure passwords using bcrypt hashing
 * Store user data in MySQL Database
 
 The project follows the **MVC (Model-View-Controller)** Architecture and uses **Sequelize ORM** for database operations.
@@ -37,6 +39,8 @@ The project follows the **MVC (Model-View-Controller)** Architecture and uses **
 
 * User Registration (Signup)
 * User Login Authentication
+* Secure Password Verification
+* Password Hashing using bcrypt
 * Duplicate User Validation
 * Password Verification
 * MySQL Database Integration
@@ -45,6 +49,58 @@ The project follows the **MVC (Model-View-Controller)** Architecture and uses **
 * MVC Architecture
 * Frontend & Backend Integration
 * Error Handling with HTTP Status Codes
+* HTTP Status Code Handling
+
+---
+
+## 🔐 Password Security
+
+### Before bcrypt
+
+Database stored passwords like:
+
+```text
+123456
+admin123
+password
+```
+
+This is unsafe because anyone with database access can view user passwords.
+
+### After bcrypt
+
+Passwords are stored as hashes:
+
+```text
+$2b$10$RkK9j...  
+$2b$10$gXfP7...
+```
+
+Actual passwords are never stored in plain text.
+
+### Signup Flow
+
+```text
+User Password
+      │
+      ▼
+bcrypt.hash()
+      │
+      ▼
+MySQL Database
+```
+
+### Login Flow
+
+```text
+User Password
+      │
+      ▼
+bcrypt.compare()
+      │
+      ▼
+Authentication Result
+```
 
 ---
 
@@ -52,6 +108,7 @@ The project follows the **MVC (Model-View-Controller)** Architecture and uses **
 
 * Node.js
 * Express.js
+* bcrypt
 * MySQL
 * Sequelize ORM
 * JavaScript
@@ -98,6 +155,7 @@ expense-tracker
 │   ├── unauthorized-user.png
 │   ├── user-not-found.png
 │   ├── mysql-data.png
+│   ├── hashed-password.png
 │   └── mvc-architecture.png
 │
 ├── app.js
@@ -123,6 +181,21 @@ POST /user/signup
   "email": "yash@gmail.com",
   "password": "123456"
 }
+```
+
+### Process
+
+```text
+Validate User
+       ↓
+Check Existing Email
+       ↓
+bcrypt.hash()
+       ↓
+Store Hashed Password
+       ↓
+Success Response
+
 ```
 
 ### Success Response
@@ -168,6 +241,18 @@ POST /user/login
   "email": "yash@gmail.com",
   "password": "123456"
 }
+```
+
+### Process
+
+```text
+Find User
+      ↓
+bcrypt.compare()
+      ↓
+Password Match ?
+      ↓
+Login Success
 ```
 
 ### Successful Login
@@ -363,6 +448,10 @@ Manage User Records
 
 ![User Not Found](./images/user-not-found.png)
 
+### Password Bcrypt
+
+![](./images/hashed-password.png)
+
 ### Database Records
 
 ![MySQL Data](./images/mysql-data.png)
@@ -371,7 +460,6 @@ Manage User Records
 
 ## 🚀 Future Improvements
 
-* Password Encryption using bcrypt
 * JWT Authentication
 * Forgot Password Feature
 * Expense Management APIs
@@ -410,5 +498,5 @@ Manage User Records
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=15&duration=3000&pause=1000&center=true&vCenter=true&width=500&lines=🚀+Happy+Coding!;✨+Keep+Learning!;💻+Keep+Building!" />
+  <img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=15&duration=3000&pause=1000&center=true&vCenter=true&width=500&lines=🚀+Happy+Coding!;✨+Keep+Learning!;💻+Keep+Building!;+🚀 Secure Code;+🔐 Secure Passwords " />
 </p>
