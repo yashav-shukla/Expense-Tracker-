@@ -1,83 +1,68 @@
-const loginForm =
-document.getElementById(
-    'loginForm'
-);
+const loginForm = document.getElementById('loginForm');
 
-loginForm.addEventListener(
-    'submit',
+loginForm.addEventListener('submit', async (event) => {
 
-    async (event) => {
+    event.preventDefault();
 
-        event.preventDefault();
+    const loginDetails = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+    };
 
-        const loginDetails = {
+    try {
 
-            email:
-            document
-            .getElementById('email')
-            .value,
+        const response = await axios.post(
+            'http://localhost:3000/user/login',
+            loginDetails
+        );
 
-            password:
-            document
-            .getElementById('password')
-            .value
-        };
+        console.log('LOGIN RESPONSE:', response.data);
 
-        try {
+        localStorage.setItem(
+            'token',
+            response.data.token
+        );
 
-            const response =
-            await axios.post(
-                'http://localhost:3000/user/login',
-                loginDetails
-            );
-            
-            alert(
-                response.data.message
-            );
-            
-            window.location.href =
-            'http://localhost:3000/expense.html';
+        console.log(
+            'TOKEN AFTER SAVE:',
+            localStorage.getItem('token')
+        );
+
+        alert(response.data.message);
+
+        window.location.href =
+        'http://localhost:3000/expense.html';
+
+    }
+
+    catch (err) {
+
+        console.log(err);
+
+        if (
+            err.response &&
+            err.response.status === 404
+        ) {
+
+            alert('User not found');
 
         }
 
-        catch (err) {
+        else if (
+            err.response &&
+            err.response.status === 401
+        ) {
 
-            console.log("FULL ERROR:", err);
-            console.log("RESPONSE:", err.response);
-            console.log("STATUS:",err.response?.status);
-            console.log("DATA:",err.response?.data);
+            alert('User not authorized');
 
-            if (
-                err.response &&
-                err.response.status === 404
-            ) {
+        }
 
-                alert(
-                    'User not found'
-                );
+        else {
 
-            }
-
-            else if (
-                err.response &&
-                err.response.status === 401
-            ) {
-
-                alert(
-                    'User not authorized'
-                );
-
-            }
-
-            else {
-
-                alert(
-                    'Something went wrong'
-                );
-
-            }
+            alert('Something went wrong');
 
         }
 
     }
-);
+
+});

@@ -1,5 +1,5 @@
 <p align="center">
-<h1 align="center">Expense Tracker - Secure Authentication & Expense Management System</h1>
+<h1 align="center">Expense Tracker - JWT Authentication & User Specific Expense Managemen</h1>
 </p>
 
 <p align="center">
@@ -14,6 +14,7 @@ A full-stack Expense Tracker application built using Node.js, Express.js, MySQL,
    <img src="https://img.shields.io/badge/bcrypt-Password%20Security-success?style=for-the-badge" />
   <img src="https://img.shields.io/badge/MVC-Architecture-orange?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Authentication-System-success?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/JWT-Authentication-red?style=for-the-badge" />
 </p>
 
 ---
@@ -24,12 +25,13 @@ This project implements the **Secure User Authentication System** for the Expens
 
 Users can:
 
-* Create a new account using Signup
-* Login using registered credentials
-* Prevent duplicate registrations
-* Validate user credentials securely
-* Secure passwords using bcrypt hashing
-* Store user data in MySQL Database
+* Register securely using bcrypt password hashing
+* Login using JWT Authentication
+* Create personal expenses
+* View only their own expenses
+* Delete only their own expenses
+* Store expenses linked to their account
+* Access protected routes using JWT tokens
 
 The project follows the **MVC (Model-View-Controller)** Architecture and uses **Sequelize ORM** for database operations.
 
@@ -38,35 +40,262 @@ The project follows the **MVC (Model-View-Controller)** Architecture and uses **
 
 ### Authentication Features
 
-* User Registration (Signup)
-* User Login Authentication
-* Secure Password Hashing using bcrypt
-* Password Verification using bcrypt.compare()
-* Duplicate User Validation
-* Secure User Authentication
-* Error Handling with HTTP Status Codes
+* User Registration
+* Login Authentication
+* bcrypt Password Hashing
+* JWT Token Generation
+* JWT Token Verification
+* Protected Routes
+* Authentication Middleware
 
 ### Expense Management Features
 
-* Add Daily Expenses
-* Expense Amount Tracking
-* Expense Description Tracking
-* Category Selection using Dropdown
-* Expense List Display
-* Fetch Expenses on Page Refresh
-* Delete Expense Feature
-* Expense Data Stored in MySQL Database
+* Add Expense
+* View User Specific Expenses
+* Delete Own Expenses
+* Expense Categories
+* Expense Persistence
+* Expense Reload on Refresh
 
-### Technical Features
+### Database Features
 
-* REST API Implementation
-* MVC Architecture
-* Sequelize ORM
-* Frontend & Backend Integration
-* Axios API Requests
-* Responsive User Interface
+* User Table
+* Expense Table
+* One-To-Many Relationship
+* Foreign Key Mapping
 ---
 
+## New Section: JWT Authentication
+
+````md
+## 🔐 JWT Authentication
+
+### Why not send User ID from Frontend?
+
+Sending userId directly from frontend is insecure because users can modify the request and access another user's data.
+
+Example:
+
+```json
+{
+  "userId": 5
+}
+```
+
+A malicious user could change:
+
+```json
+{
+  "userId": 1
+}
+```
+
+and access someone else's expenses.
+
+Therefore user identity must be verified using JWT.
+
+---
+
+### Token Generation
+
+After successful login:
+
+```text
+User Login
+      ↓
+Verify Password
+      ↓
+Generate JWT Token
+      ↓
+Send Token To Frontend
+```
+
+Example:
+
+```js
+jwt.sign(
+    {
+        userId: user.id,
+        name: user.name
+    },
+    'secretkey'
+);
+```
+
+---
+
+### Token Verification
+
+Frontend sends token:
+
+```text
+Authorization: JWT_TOKEN
+```
+
+Backend verifies token:
+
+```js
+jwt.verify(token, 'secretkey');
+```
+
+If token is valid:
+
+```js
+req.user = decodedToken;
+```
+
+User information becomes available in all protected routes.
+````
+---
+
+## New Database Relationship Section
+
+````md
+## 🔗 User & Expense Relationship
+
+### One User
+
+Can Have
+
+### Many Expenses
+
+```text
+User
+  │
+  ├── Expense 1
+  ├── Expense 2
+  ├── Expense 3
+```
+
+### Sequelize Relationship
+
+```js
+User.hasMany(Expense);
+
+Expense.belongsTo(User);
+```
+
+This automatically creates:
+
+```text
+userId
+```
+
+inside Expense Table.
+````
+
+---
+
+
+# Update Expense Schema
+
+```md
+## 🗃 Expense Table Schema
+
+| Field       | Type    |
+|------------|---------|
+| id         | INTEGER |
+| amount     | FLOAT |
+| description| STRING |
+| category   | STRING |
+| userId     | INTEGER |
+```
+
+---
+
+# New Protected Routes Section
+
+````md
+## 🛡 Protected Routes
+
+### Add Expense
+
+```http
+POST /expense/add-expense
+```
+
+Protected using:
+
+```js
+auth
+```
+
+middleware.
+
+---
+
+### Get Expenses
+
+```http
+GET /expense/get-expenses
+```
+
+Returns only logged-in user's expenses.
+
+---
+
+### Delete Expense
+
+```http
+DELETE /expense/delete-expense/:id
+```
+
+User can delete only expenses created by them.
+````
+
+---
+
+# Update Expense Flow
+
+````md
+## 💰 User Specific Expense Flow
+
+```text
+User Login
+      ↓
+JWT Token Generated
+      ↓
+Token Stored In LocalStorage
+      ↓
+Expense Added
+      ↓
+Token Sent In Header
+      ↓
+Middleware Verifies User
+      ↓
+userId Extracted
+      ↓
+Expense Saved With userId
+      ↓
+Expense Linked To User
+```
+````
+
+---
+
+# New Middleware Section
+
+````md
+## 🔒 Authentication Middleware
+
+File:
+
+```text
+middleware/auth.js
+```
+
+Responsibilities:
+
+```text
+Read JWT Token
+Verify Token
+Extract User Information
+Attach User To Request
+Allow Access To Protected Routes
+```
+````
+
+---
 ## 🔐 Password Security
 
 ### Before bcrypt
@@ -604,11 +833,14 @@ expense-tracker
 
 ![Add Expense](./images/add-expense.png)
 
-
-
 ### Delete Expense
 
 ![Delete Expense](./images/delete-expense.png)
+
+### User Per Login
+
+![Delete Expense](./images/user_per_login.png)
+
 ### Database Records
 
 ![MySQL Data](./images/mysql-data.png)
@@ -618,16 +850,22 @@ expense-tracker
 ![Expense List](./images/expense-list.png)
 ---
 
+
 ## 🚀 Future Improvements
 
-* JWT Authentication
-* User-Specific Expenses
+```md
+
 * Premium Membership
 * Leaderboard Feature
+* Expense Pagination
+* Download Expense Reports
+* Forgot Password
 * Razorpay Integration
-* Forgot Password Feature
-* Monthly Expense Reports
 * AWS Deployment
+* Monthly Analytics
+* AI Powered Expense Insights
+```
+
 
 ---
 

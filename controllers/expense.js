@@ -9,11 +9,16 @@ exports.addExpense = async (req, res) => {
             description,
             category
         } = req.body;
-
+        
         const expense = await Expense.create({
+
             amount,
             description,
-            category
+            category,
+        
+            userId:
+            req.user.userId
+        
         });
 
         res.status(201).json({
@@ -35,13 +40,21 @@ exports.addExpense = async (req, res) => {
     }
 
 };
-
 exports.getExpenses = async (req, res) => {
 
     try {
 
         const expenses =
-            await Expense.findAll();
+        await Expense.findAll({
+
+            where: {
+
+                userId:
+                req.user.userId
+
+            }
+
+        });
 
         res.status(200).json(expenses);
 
@@ -64,16 +77,46 @@ exports.deleteExpense = async (req, res) => {
     try {
 
         const expenseId =
-            req.params.id;
+        req.params.id;
 
-        await Expense.destroy({
+        const expense =
+        await Expense.findOne({
+
             where: {
-                id: expenseId
+
+                id: expenseId,
+
+                userId:
+                req.user.userId
+
             }
+
         });
 
-        res.status(200).json({
-            success: true
+        if (!expense) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message:
+                'Expense not found'
+
+            });
+
+        }
+
+        await Expense.destroy({
+
+            where: {
+        
+                id: expenseId,
+        
+                userId:
+                req.user.userId
+        
+            }
+        
         });
 
     }
@@ -83,7 +126,9 @@ exports.deleteExpense = async (req, res) => {
         console.log(err);
 
         res.status(500).json({
+
             success: false
+
         });
 
     }

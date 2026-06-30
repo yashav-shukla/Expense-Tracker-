@@ -1,12 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const User = require('./models/user');
+const Expense = require('./models/expense');
 
 const sequelize =
 require('./util/database');
 
-require('./models/user');
-require('./models/expense');
+
+User.hasMany(Expense);
+
+Expense.belongsTo(User);
 
 const userRoutes =
 require('./routes/user');
