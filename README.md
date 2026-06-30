@@ -1,9 +1,9 @@
 <p align="center">
-  <h1 align="center">Expense Tracker - Secure User Authentication System</h1>
+<h1 align="center">Expense Tracker - Secure Authentication & Expense Management System</h1>
 </p>
 
 <p align="center">
-  A secure User Authentication Module for the Expense Tracker application built using Node.js, Express.js, MySQL, Sequelize ORM, and bcrypt following MVC Architecture.
+A full-stack Expense Tracker application built using Node.js, Express.js, MySQL, Sequelize ORM, bcrypt, and MVC Architecture. Users can securely sign up, log in, and manage their daily expenses.
 </p>
 
 <p align="center">
@@ -34,23 +34,37 @@ Users can:
 The project follows the **MVC (Model-View-Controller)** Architecture and uses **Sequelize ORM** for database operations.
 
 ---
-
 ## ✨ Features
+
+### Authentication Features
 
 * User Registration (Signup)
 * User Login Authentication
-* Secure Password Verification
-* Password Hashing using bcrypt
+* Secure Password Hashing using bcrypt
+* Password Verification using bcrypt.compare()
 * Duplicate User Validation
-* Password Verification
-* MySQL Database Integration
-* Sequelize ORM
+* Secure User Authentication
+* Error Handling with HTTP Status Codes
+
+### Expense Management Features
+
+* Add Daily Expenses
+* Expense Amount Tracking
+* Expense Description Tracking
+* Category Selection using Dropdown
+* Expense List Display
+* Fetch Expenses on Page Refresh
+* Delete Expense Feature
+* Expense Data Stored in MySQL Database
+
+### Technical Features
+
 * REST API Implementation
 * MVC Architecture
+* Sequelize ORM
 * Frontend & Backend Integration
-* Error Handling with HTTP Status Codes
-* HTTP Status Code Handling
-
+* Axios API Requests
+* Responsive User Interface
 ---
 
 ## 🔐 Password Security
@@ -125,13 +139,16 @@ Authentication Result
 expense-tracker
 │
 ├── controllers
-│   └── user.js
+│   ├── user.js
+│   └── expense.js
 │
 ├── models
-│   └── user.js
+│   ├── user.js
+│   └── expense.js
 │
 ├── routes
-│   └── user.js
+│   ├── user.js
+│   └── expense.js
 │
 ├── util
 │   └── database.js
@@ -142,21 +159,12 @@ expense-tracker
 │   ├── signup.js
 │   ├── login.html
 │   ├── login.css
-│   └── login.js
+│   ├── login.js
+│   ├── expense.html
+│   ├── expense.css
+│   └── expense.js
 │
 ├── images
-│   ├── signup-page.png
-│   ├── login-page.png
-│   ├── network-request.png
-│   ├── network-request2.png
-│   ├── postman-success.png
-│   ├── postman-success2.png
-│   ├── login-success.png
-│   ├── unauthorized-user.png
-│   ├── user-not-found.png
-│   ├── mysql-data.png
-│   ├── hashed-password.png
-│   └── mvc-architecture.png
 │
 ├── app.js
 ├── package.json
@@ -182,6 +190,7 @@ POST /user/signup
   "password": "123456"
 }
 ```
+
 
 ### Process
 
@@ -297,6 +306,66 @@ Status Code:
 404 Not Found
 ```
 
+### 💰 Expense APIs
+
+
+### Add Expense
+
+```http
+POST /expense/add-expense
+```
+### Request Body
+
+```
+{
+  "amount": 500,
+  "description": "Petrol",
+  "category": "Fuel"
+}
+```
+### Success Response
+
+```
+{
+  "success": true,
+  "expense": {
+    "id": 1,
+    "amount": 500,
+    "description": "Petrol",
+    "category": "Fuel"
+  }
+}
+```
+
+### Status Code:
+
+```
+201 Created
+```
+
+### Get Expenses
+
+```
+GET /expense/get-expenses
+```
+### Status Code:
+
+```
+200 OK
+```
+### Delete Expense
+
+```
+DELETE /expense/delete-expense/:id
+```
+
+### Status Code:
+
+```
+200 OK
+```
+
+
 ---
 
 ## 📤 Authentication Flow
@@ -333,6 +402,30 @@ Frontend Alert
 | password | STRING  |
 
 ---
+
+# Add Expense Flow
+
+```md
+## 💰 Expense Flow
+
+```text
+User Login
+      ↓
+Expense Page Opens
+      ↓
+Enter Expense Details
+      ↓
+Axios POST Request
+      ↓
+Expense Route
+      ↓
+Expense Controller
+      ↓
+Expense Model
+      ↓
+MySQL Database
+      ↓
+Expense Displayed on Screen
 
 ## 🏗 MVC Architecture
 
@@ -377,11 +470,61 @@ Database Operations
 Store User Data
 Manage User Records
 ```
+---
 
-### MVC Architecture Diagram
-
+### Previous MVC Architecture Diagram
+---
 ![MVC Architecture](./images/mvc-architecture.png)
-
+---
+### Updated MVC Architecture Diagram
+---
+```
+expense-tracker
+│
+├── controllers                 ←  Controller Layer
+│   ├── user.js
+│   └── expense.js
+│
+├── models                      ←  Model Layer               
+│   ├── user.js
+│   └── expense.js
+│
+├── routes                      ←  Route Layer
+│   ├── user.js
+│   └── expense.js
+│
+├── util
+│   └── database.js            ←  Database Configuration
+│
+├── views                      ←  View Layer
+│   │
+│   ├── signup.html
+│   ├── signup.css
+│   ├── signup.js
+│   │
+│   ├── login.html
+│   ├── login.css
+│   ├── login.js
+│   │
+│   ├── expense.html
+│   ├── expense.css
+│   └── expense.js
+│
+├── images
+│   ├── signup-page.png
+│   ├── login-page.png
+│   ├── expense-page.png
+│   ├── add-expense.png
+│   ├── expense-table.png
+│   ├── delete-expense.png
+│   ├── mysql-data.png
+│   └── mvc-architecture.png
+│
+├── app.js                   ←  Application Entry Point
+├── package.json 
+├── package-lock.json
+└── README.md
+```
 ---
 
 ## MVC Flow Diagram
@@ -452,19 +595,38 @@ Manage User Records
 
 ![](./images/hashed-password.png)
 
+
+### Expense Dashboard
+
+![Expense Dashboard](./images/expense-dashboard.png)
+
+### Add Expense
+
+![Add Expense](./images/add-expense.png)
+
+
+
+### Delete Expense
+
+![Delete Expense](./images/delete-expense.png)
 ### Database Records
 
 ![MySQL Data](./images/mysql-data.png)
 
+### Expense List
+
+![Expense List](./images/expense-list.png)
 ---
 
 ## 🚀 Future Improvements
 
 * JWT Authentication
-* Forgot Password Feature
-* Expense Management APIs
-* Premium Membership Features
+* User-Specific Expenses
+* Premium Membership
+* Leaderboard Feature
 * Razorpay Integration
+* Forgot Password Feature
+* Monthly Expense Reports
 * AWS Deployment
 
 ---

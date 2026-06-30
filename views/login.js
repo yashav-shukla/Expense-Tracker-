@@ -27,16 +27,16 @@ loginForm.addEventListener(
 
             const response =
             await axios.post(
-
                 'http://localhost:3000/user/login',
-
                 loginDetails
-
             );
-
+            
             alert(
                 response.data.message
             );
+            
+            window.location.href =
+            'http://localhost:3000/expense.html';
 
         }
 

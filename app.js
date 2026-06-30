@@ -2,11 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-const sequelize = require('./util/database');
+const sequelize =
+require('./util/database');
 
 require('./models/user');
+require('./models/expense');
 
-const userRoutes = require('./routes/user');
+const userRoutes =
+require('./routes/user');
+
+const expenseRoutes =
+require('./routes/expense');
 
 const app = express();
 
@@ -14,14 +20,35 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, 'views')));
+app.use(
+    express.static(
+        path.join(
+            __dirname,
+            'views'
+        )
+    )
+);
 
-app.use('/user', userRoutes);
+app.use(
+    '/user',
+    userRoutes
+);
+
+app.use(
+    '/expense',
+    expenseRoutes
+);
 
 app.get('/', (req, res) => {
+
     res.sendFile(
-        path.join(__dirname, 'views', 'signup.html')
+        path.join(
+            __dirname,
+            'views',
+            'signup.html'
+        )
     );
+
 });
 
 sequelize.sync()
@@ -29,7 +56,9 @@ sequelize.sync()
 
     app.listen(3000, () => {
 
-        console.log('Server running on port 3000');
+        console.log(
+            'Server running on port 3000'
+        );
 
     });
 
